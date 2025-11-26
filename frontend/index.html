@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess Game Review</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Game Review</h1>
+            <p>Paste a PGN or Lichess game URL to analyse.</p>
+        </header>
+        <section class="input-panel">
+            <textarea id="pgn-input" placeholder="Paste PGN here..."></textarea>
+            <input type="text" id="url-input" placeholder="or Lichess game URL" />
+            <button id="analyse-btn">Analyse Game</button>
+            <div id="status"></div>
+        </section>
+
+        <section id="results" class="hidden">
+            <div id="graph" class="graph"></div>
+            <div class="players">
+                <div class="player-card" id="white-card">
+                    <div class="avatar">W</div>
+                    <div>
+                        <div class="name" id="white-name">White</div>
+                        <div class="accuracy" id="white-accuracy">0</div>
+                    </div>
+                </div>
+                <div class="player-card" id="black-card">
+                    <div class="avatar black">B</div>
+                    <div>
+                        <div class="name" id="black-name">Black</div>
+                        <div class="accuracy" id="black-accuracy">0</div>
+                    </div>
+                </div>
+            </div>
+            <table id="summary-table">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        <th>White</th>
+                        <th>Black</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="start-review">Start Review</button>
+        </section>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>
