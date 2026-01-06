@@ -1,32 +1,50 @@
-# Chess Game Review
+# Chess OCR + Lichess Eval (Desktop Skeleton)
 
-A lightweight FastAPI + vanilla JS demo that analyses a Lichess game or raw PGN,
-labels each move with chess.com-style annotations, and renders a dark-themed
-results panel inspired by the chess.com Game Review UI.
+This repo now ships a minimal, standalone desktop prototype for Windows/macOS/
+Linux that:
 
-## Features
-- Input a PGN directly or paste a Lichess game URL to fetch the PGN.
-- Mocked engine evaluation (pluggable for Stockfish/Lichess cloud later).
-- Move labels: Brilliant, Great, Best, Excellent, Good, Book, Inaccuracy, Mistake, Miss, Blunder.
-- Accuracy score per player plus label counts.
-- Simple evaluation graph and summary table in the browser.
+- Lets you select a PNG screenshot of a chess board.
+- Runs lightweight OCR to guess the FEN.
+- Calls Lichess Cloud Eval (with automatic mock fallback) to get an engine
+  score and principal variation.
+- Produces a short, chess.com-style “free-lite” summary of the position.
 
-## Getting started
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app:app --reload
-```
+The implementation keeps the original FastAPI demo for reference but adds a
+Tkinter desktop shell to avoid hosting a local web server.
 
-Open http://localhost:8000 in your browser, paste a PGN (or Lichess URL), and
-click **Analyse Game**.
+## Quickstart (Desktop)
 
-## Configuration notes
-- The engine is mocked in `engine_interface.py`. Replace `evaluate_position`
-  with a call to Stockfish or the Lichess Cloud Evaluation API to get real
-  analysis.
-- Move classification thresholds live in `analysis.py` for easy tuning.
+1. Install Python 3.10+.
+2. (Windows) Install [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki)
+   and ensure `tesseract` is on your PATH.
+3. Install deps:
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate  # Windows
+   # or: source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+4. Run the desktop app:
+   ```bash
+   python desktop.py
+   ```
 
-## Example PGN
-See `examples/sample.pgn` for a quick test game.
+## OCR notes
+- OCR is intentionally simple. It assumes an 8x8 board fills the image and
+  attempts per-square character recognition. Accuracy depends on the piece set.
+- If OCR is wrong, edit the FEN field manually and re-run **Analyze**.
+- TODO: add board auto-detection and template matching for better accuracy.
+
+## Lichess evaluation
+- The app calls the public Lichess Cloud Eval endpoint. If the request fails
+  (offline/rate limit), it falls back to a mock response so the UI keeps
+  working.
+
+## Development
+- `analysis_summary.py` isolates the wording/thresholds for the summary layer.
+- Tests: `pytest tests/test_summary.py`
+
+## Known limitations / next steps
+- OCR is fragile; add board detection and better piece recognition.
+- No packaging yet (pyinstaller/briefcase); run via `python desktop.py`.
+- Move-by-move review and PGN parsing remain in the legacy FastAPI demo.
